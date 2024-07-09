@@ -1,0 +1,14 @@
+context_providers:
+  asana:
+    enabled: true
+    project_id: "your_asana_project_id"
+    fields:
+      Task: "name"
+      Task ID: "gid"
+      Created At: "created_at"
+      Modified At: "modified_at"
+      Completed: "completed"
+      Assignee: "assignee"
+      Due On: "due_on"
+      Notes: "notes"
+  # Add other context providers here

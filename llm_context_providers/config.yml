@@ -1,0 +1,5 @@
+context_providers:
+  asana:
+    enabled: true
+    project_id: "your_project_id"
+  # Add other context providers here
