@@ -24,11 +24,6 @@ Create a `.env` file in the root of your project directory to store sensitive in
 
 ```
 ASANA_PERSONAL_ACCESS_TOKEN=your_asana_personal_access_token
-QUIP_ACCESS_TOKEN=your_quip_access_token
-ONENOTE_CLIENT_ID=your_onenote_client_id
-ONENOTE_CLIENT_SECRET=your_onenote_client_secret
-OUTLOOK_CLIENT_ID=your_outlook_client_id
-OUTLOOK_CLIENT_SECRET=your_outlook_client_secret
 ```
 
 Ensure that the `.env` file is listed in your `.gitignore` to prevent it from being tracked by Git:
