@@ -2,12 +2,13 @@ import os
 import pytest
 from unittest.mock import patch, AsyncMock
 from llm_context_providers import AsanaContextProvider
-from dotenv import load_dotenv
 
-load_dotenv()
+@pytest.fixture(autouse=True)
+def mock_env_vars(monkeypatch):
+    monkeypatch.setenv('ASANA_PERSONAL_ACCESS_TOKEN', 'mock_token')
 
 @pytest.mark.asyncio
-async def test_fetch_context_async():
+async def test_fetch_context_async(mock_env_vars):
     provider = AsanaContextProvider(
         project_id=os.getenv("ASANA_PROJECT_ID", "test_project_id"),
         timezone="America/Toronto",
@@ -38,7 +39,7 @@ async def test_fetch_context_async():
         assert context is not None
         assert "Project:" in context
 
-def test_fetch_context_sync():
+def test_fetch_context_sync(mock_env_vars):
     provider = AsanaContextProvider(
         project_id=os.getenv("ASANA_PROJECT_ID", "test_project_id"),
         timezone="America/Toronto",
@@ -69,7 +70,7 @@ def test_fetch_context_sync():
         assert context is not None
         assert "Project:" in context
 
-def test_missing_project_id():
+def test_missing_project_id(mock_env_vars):
     with pytest.raises(ValueError, match="Asana project ID is not set"):
         AsanaContextProvider(
             project_id=None,
