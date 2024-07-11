@@ -1,7 +1,3 @@
-Sure, here is the revised README with a more focused quick start section and a separate section demonstrating the full functionality:
-
----
-
 # LLM Context Providers
 
 A Python package to manage and fetch context from various sources like Asana, Quip, OneNote, Outlook Calendar, etc. This package is designed to be easily extensible, allowing new context providers to be added with minimal changes to the core logic.
@@ -185,6 +181,3 @@ Contributions are welcome! Please create a pull request or raise an issue to dis
 
 This project is licensed under the MIT License.
 
----
-
-This revised README provides a clear and concise guide for developers to quickly get started with using the package, along with a separate section for demonstrating the full functionality.
