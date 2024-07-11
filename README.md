@@ -37,69 +37,70 @@ context_providers:
   # Add other context providers here
 ```
 
-Create a `.env` file to store your credentials:
-
-```
-ASANA_PERSONAL_ACCESS_TOKEN=your_asana_personal_access_token
-# Add other environment variables here
-```
-
 ## Usage
 
-### Initializing Context Manager
+### Quick Start
+
+Create an `app.py` file with the following content to quickly get started:
 
 ```python
 import yaml
+import asyncio
 from llm_context_providers import ContextManager
 
+# Load configuration from YAML file
 def load_config(config_file='config.yml'):
     with open(config_file, 'r') as file:
         return yaml.safe_load(file)
 
-config = load_config()
-manager = ContextManager(config['context_providers'])
-```
-
-### Fetching Context Asynchronously
-
-```python
-import asyncio
-
-async def fetch_async():
+# Fetch contexts asynchronously and print the combined context
+async def main_async(config):
+    manager = ContextManager(config['context_providers'])
     await manager.fetch_contexts_async()
     context = manager.get_combined_context()
-    print("Async Fetch Context:\n", context)
+    print("Async Fetch Context (All):\n", context)
 
-asyncio.run(fetch_async())
-```
-
-### Fetching Context Synchronously
-
-```python
-manager.fetch_contexts()
-context = manager.get_combined_context()
-print("Sync Fetch Context:\n", context)
-```
-
-### Fetching Specific Context Providers
-
-#### Asynchronously
-
-```python
-async def fetch_specific_async():
+# Fetch specific context asynchronously and print the combined context
+async def main_async_specific(config):
+    manager = ContextManager(config['context_providers'])
     await manager.fetch_contexts_async(providers=['asana'])
     context = manager.get_combined_context(providers=['asana'])
-    print("Async Fetch Specific Context:\n", context)
+    print("Async Fetch Context (Specific):\n", context)
 
-asyncio.run(fetch_specific_async())
+# Fetch contexts synchronously and print the combined context
+def main_sync(config):
+    manager = ContextManager(config['context_providers'])
+    manager.fetch_contexts()
+    context = manager.get_combined_context()
+    print("Sync Fetch Context (All):\n", context)
+
+# Fetch specific context synchronously and print the combined context
+def main_sync_specific(config):
+    manager = ContextManager(config['context_providers'])
+    manager.fetch_contexts(providers=['asana'])
+    context = manager.get_combined_context(providers=['asana'])
+    print("Sync Fetch Context (Specific):\n", context)
+
+if __name__ == "__main__":
+    config = load_config()
+
+    print("Running Async Fetch (All):")
+    asyncio.run(main_async(config))
+
+    print("\nRunning Async Fetch (Specific):")
+    asyncio.run(main_async_specific(config))
+
+    print("\nRunning Sync Fetch (All):")
+    main_sync(config)
+
+    print("\nRunning Sync Fetch (Specific):")
+    main_sync_specific(config)
 ```
 
-#### Synchronously
+Run the application:
 
-```python
-manager.fetch_contexts(providers=['asana'])
-context = manager.get_combined_context(providers=['asana'])
-print("Sync Fetch Specific Context:\n", context)
+```bash
+python app.py
 ```
 
 ## Extending with New Context Providers
@@ -141,67 +142,6 @@ class NewContextProvider(ContextProvider):
 
 Add the new context provider to your configuration file and ensure the package's `ContextProvider` class can recognize the new provider.
 
-## Testing
-
-To run the test application:
-
-1. Create a `test_app.py` file with the following content:
-
-```python
-import yaml
-import asyncio
-from llm_context_providers import ContextManager
-
-def load_config(config_file='config.yml'):
-    with open(config_file, 'r') as file:
-        return yaml.safe_load(file)
-
-async def main_async(config):
-    manager = ContextManager(config['context_providers'])
-    await manager.fetch_contexts_async()
-    context = manager.get_combined_context()
-    print("Async Fetch Context (All):\n", context)
-
-async def main_async_specific(config):
-    manager = ContextManager(config['context_providers'])
-    await manager.fetch_contexts_async(providers=['asana'])
-    context = manager.get_combined_context(providers=['asana'])
-    print("Async Fetch Context (Specific):\n", context)
-
-def main_sync(config):
-    manager = ContextManager(config['context_providers'])
-    manager.fetch_contexts()
-    context = manager.get_combined_context()
-    print("Sync Fetch Context (All):\n", context)
-
-def main_sync_specific(config):
-    manager = ContextManager(config['context_providers'])
-    manager.fetch_contexts(providers=['asana'])
-    context = manager.get_combined_context(providers=['asana'])
-    print("Sync Fetch Context (Specific):\n", context)
-
-if __name__ == "__main__":
-    config = load_config()
-
-    print("Testing Async Fetch (All):")
-    asyncio.run(main_async(config))
-
-    print("\nTesting Async Fetch (Specific):")
-    asyncio.run(main_async_specific(config))
-
-    print("\nTesting Sync Fetch (All):")
-    main_sync(config)
-
-    print("\nTesting Sync Fetch (Specific):")
-    main_sync_specific(config)
-```
-
-2. Run the test application:
-
-```bash
-python test_app.py
-```
-
 ## Contributing
 
 Contributions are welcome! Please create a pull request or raise an issue to discuss your ideas.
@@ -209,3 +149,4 @@ Contributions are welcome! Please create a pull request or raise an issue to dis
 ## License
 
 This project is licensed under the MIT License.
+
