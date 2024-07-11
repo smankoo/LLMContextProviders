@@ -15,9 +15,54 @@ A Python package to manage and fetch context from various sources like Asana, Qu
 pip install llm-context-providers
 ```
 
-## Configuration
+## Quick Start
 
-Create a `config.yml` file to configure your context providers. Here is an example configuration:
+Create an `app.py` file with the following content to quickly get started without needing a `config.yml`:
+
+```python
+from llm_context_providers import ContextManager
+
+# Define configuration directly in the code
+config = {
+    'context_providers': {
+        'asana': {
+            'enabled': True,
+            'project_id': 'your_asana_project_id',
+            'fields': {
+                'Task': 'name',
+                'Task ID': 'gid',
+                'Created At': 'created_at',
+                'Modified At': 'modified_at',
+                'Completed': 'completed',
+                'Assignee': 'assignee',
+                'Due On': 'due_on',
+                'Notes': 'notes'
+            },
+            'timezone': 'America/Toronto'
+        }
+    }
+}
+
+# Fetch contexts synchronously and print the combined context
+def main_sync(config):
+    manager = ContextManager(config['context_providers'])
+    manager.fetch_contexts()
+    context = manager.get_combined_context()
+    print("Sync Fetch Context (All):\n", context)
+
+if __name__ == "__main__":
+    main_sync(config)
+```
+
+Run the application:
+
+```bash
+python app.py
+```
+
+## Full Functionality
+
+For easier maintainability and to handle more complex configurations, it's recommended to use a `config.yml` file. Here is an example configuration:
 
 ```yaml
 context_providers:
@@ -37,42 +82,9 @@ context_providers:
   # Add other context providers here
 ```
 
-## Quick Start
+### Using the Configuration File
 
-Create an `app.py` file with the following content to quickly get started:
-
-```python
-import yaml
-from llm_context_providers import ContextManager
-
-# Load configuration from YAML file
-def load_config(config_file='config.yml'):
-    with open(config_file, 'r') as file:
-        return yaml.safe_load(file)
-
-# Fetch contexts synchronously and print the combined context
-def main_sync(config):
-    manager = ContextManager(config['context_providers'])
-    manager.fetch_contexts()
-    context = manager.get_combined_context()
-    print("Sync Fetch Context (All):\n", context)
-
-if __name__ == "__main__":
-    config = load_config()
-    main_sync(config)
-```
-
-Run the application:
-
-```bash
-python app.py
-```
-
-## Full Functionality
-
-### Asynchronous and Specific Context Fetching
-
-Update your `app.py` to demonstrate the full functionality, including asynchronous and specific context fetching:
+Update your `app.py` to load configuration from `config.yml` and demonstrate the full functionality, including asynchronous and specific context fetching:
 
 ```python
 import yaml
@@ -180,4 +192,3 @@ Contributions are welcome! Please create a pull request or raise an issue to dis
 ## License
 
 This project is licensed under the MIT License.
-
