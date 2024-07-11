@@ -1,30 +1,26 @@
-import yaml
 import os
 from dotenv import load_dotenv
 from .context_provider import ContextProvider
+from copy import deepcopy
 
 class ContextManager:
-    def __init__(self, config_file='config.yml'):
+    def __init__(self, context_providers_config):
         load_dotenv()
-        with open(config_file, 'r') as file:
-            self.config = yaml.safe_load(file)
-
+        self.context_providers_config = context_providers_config
         self.context_providers = self.initialize_providers()
 
     def initialize_providers(self):
         providers = {}
-        context_providers_config = self.config.get('context_providers', {})
-
-        for provider_name, provider_config in context_providers_config.items():
+        for provider_name, provider_config in self.context_providers_config.items():
             if provider_config.get('enabled', False):
                 provider_class = ContextProvider.get_provider_class(f"{provider_name.capitalize()}ContextProvider")
                 if provider_class:
-                    # Exclude 'enabled' key and pass the rest of the config to the provider
-                    provider_config.pop('enabled', None)
-                    providers[provider_name] = provider_class(**provider_config)
+                    # Pass a copy of the config to avoid mutating the original
+                    config_copy = deepcopy(provider_config)
+                    config_copy.pop('enabled', None)
+                    providers[provider_name] = provider_class(**config_copy)
                 else:
                     print(f"Warning: No context provider class found for {provider_name}")
-
         return providers
 
     async def fetch_contexts_async(self, providers=None):

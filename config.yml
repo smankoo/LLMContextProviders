@@ -1,7 +1,7 @@
 context_providers:
   asana:
     enabled: true
-    project_id: "your_asana_project_id"
+    project_id: "1207751230670395"
     fields:
       Task: "name"
       Task ID: "gid"
@@ -11,4 +11,5 @@ context_providers:
       Assignee: "assignee"
       Due On: "due_on"
       Notes: "notes"
+    timezone: "America/Toronto"
   # Add other context providers here
