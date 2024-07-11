@@ -19,15 +19,15 @@ DEFAULT_TASK_FIELDS = {
 }
 
 class AsanaContextProvider(ContextProvider):
-    def __init__(self, project_id, fields=None, timezone="America/Toronto", **kwargs):
+    def __init__(self, project_id, personal_access_token=None, fields=None, timezone="America/Toronto", **kwargs):
         super().__init__()
-        self.personal_access_token = os.getenv('ASANA_PERSONAL_ACCESS_TOKEN')
+        self.personal_access_token = personal_access_token or os.getenv('ASANA_PERSONAL_ACCESS_TOKEN')
         self.project_id = project_id
         self.fields = fields or DEFAULT_TASK_FIELDS
         self.TIMEZONE = timezone
 
         if not self.personal_access_token:
-            raise ValueError("Asana personal access token is not set. Please ensure it is defined in the .env file.")
+            raise ValueError("Asana personal access token is not set. Please provide it as an argument or define it in the environment variables.")
 
         if not self.project_id:
             raise ValueError("Asana project ID is not set. Please ensure it is defined in the config.yml file.")
