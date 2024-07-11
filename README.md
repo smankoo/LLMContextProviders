@@ -17,7 +17,7 @@ pip install llm-context-providers
 
 ## Quick Start
 
-Create an `app.py` file with the following content to quickly get started without needing a `config.yml`:
+Create an `app.py` file with the following content to quickly get started:
 
 ```python
 from llm_context_providers import ContextManager
