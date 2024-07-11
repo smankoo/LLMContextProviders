@@ -9,6 +9,7 @@ async def test_fetch_all_contexts_async():
             'asana': {
                 'enabled': True,
                 'project_id': 'test_project_id',
+                'personal_access_token': 'mock_personal_access_token',
                 'timezone': 'America/Toronto',
                 'fields': {
                     "Task": "name",
@@ -35,6 +36,7 @@ def test_fetch_all_contexts():
             'asana': {
                 'enabled': True,
                 'project_id': 'test_project_id',
+                'personal_access_token': 'mock_personal_access_token',
                 'timezone': 'America/Toronto',
                 'fields': {
                     "Task": "name",
