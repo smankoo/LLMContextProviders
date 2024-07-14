@@ -39,7 +39,7 @@ jobs:
           pytest tests/
 
       - name: Publish to PyPI
-        if: github.ref == 'refs/heads/main' && matrix.python-version == '3.12' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && matrix.python-version == '3.12' && matrix.os == 'ubuntu-latest' && github.event_name == 'push'
         run: bash publish.sh
         env:
           TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
