@@ -180,7 +180,12 @@ class MarkdownFormatter:
         if date_str:
             date = parser.parse(date_str)
             date = date.astimezone(pytz.timezone(timezone))
-            return date.strftime('%B %-dth, %Y %-I:%M %p')
+
+            day = date.day
+            suffix = 'th' if 4 <= day % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(day % 10, 'th')
+            formatted_date = date.strftime(f'%B {day}{suffix}, %Y %I:%M %p')
+
+            return formatted_date
         return 'N/A'
 
     def generate_project_markdown(self, project, tasks, task_fields, timezone):
