@@ -20,38 +20,52 @@ pip install llm-context-providers
 Create an `app.py` file with the following content to quickly get started:
 
 ```python
+import yaml
+import asyncio
 from llm_context_providers import ContextManager
 
-# Define configuration directly in the code
-config = {
-    'context_providers': {
-        'asana': {
-            'enabled': True,
-            'project_id': 'your_asana_project_id',
-            'fields': {
-                'Task': 'name',
-                'Task ID': 'gid',
-                'Created At': 'created_at',
-                'Modified At': 'modified_at',
-                'Completed': 'completed',
-                'Assignee': 'assignee',
-                'Due On': 'due_on',
-                'Notes': 'notes'
-            },
-            'timezone': 'America/Toronto'
-        }
-    }
-}
+def load_config(config_file='config.yml'):
+    with open(config_file, 'r') as file:
+        return yaml.safe_load(file)
 
-# Fetch contexts synchronously and print the combined context
+async def main_async(config):
+    manager = ContextManager(config)
+    await manager.fetch_contexts_async()
+    context = manager.get_combined_context()
+    print("Async Fetch Context (All):\n", context)
+
+async def main_async_specific(config):
+    manager = ContextManager(config)
+    await manager.fetch_contexts_async(providers=['asana'])
+    context = manager.get_combined_context(providers=['asana'])
+    print("Async Fetch Context (Specific):\n", context)
+
 def main_sync(config):
-    manager = ContextManager(config['context_providers'])
+    manager = ContextManager(config)
     manager.fetch_contexts()
     context = manager.get_combined_context()
     print("Sync Fetch Context (All):\n", context)
 
+def main_sync_specific(config):
+    manager = ContextManager(config)
+    manager.fetch_contexts(providers=['asana'])
+    context = manager.get_combined_context(providers=['asana'])
+    print("Sync Fetch Context (Specific):\n", context)
+
 if __name__ == "__main__":
+    config = load_config()
+
+    print("Testing Async Fetch (All):")
+    asyncio.run(main_async(config))
+
+    print("\nTesting Async Fetch (Specific):")
+    asyncio.run(main_async_specific(config))
+
+    print("\nTesting Sync Fetch (All):")
     main_sync(config)
+
+    print("\nTesting Sync Fetch (Specific):")
+    main_sync_specific(config)
 ```
 
 Run the application:
@@ -65,6 +79,9 @@ python app.py
 For easier maintainability and to handle more complex configurations, it's recommended to use a `config.yml` file. Here is an example configuration:
 
 ```yaml
+global:
+  timezone: "America/Toronto"
+
 context_providers:
   asana:
     enabled: true
@@ -78,11 +95,10 @@ context_providers:
       Assignee: "assignee"
       Due On: "due_on"
       Notes: "notes"
-    timezone: "America/Toronto"
   # Add other context providers here
 ```
 
-### Using the Configuration File
+## Using the Configuration File
 
 Update your `app.py` to load configuration from `config.yml` and demonstrate the full functionality, including asynchronous and specific context fetching:
 
@@ -91,35 +107,30 @@ import yaml
 import asyncio
 from llm_context_providers import ContextManager
 
-# Load configuration from YAML file
 def load_config(config_file='config.yml'):
     with open(config_file, 'r') as file:
         return yaml.safe_load(file)
 
-# Fetch contexts asynchronously and print the combined context
 async def main_async(config):
-    manager = ContextManager(config['context_providers'])
+    manager = ContextManager(config)
     await manager.fetch_contexts_async()
     context = manager.get_combined_context()
     print("Async Fetch Context (All):\n", context)
 
-# Fetch specific context asynchronously and print the combined context
 async def main_async_specific(config):
-    manager = ContextManager(config['context_providers'])
+    manager = ContextManager(config)
     await manager.fetch_contexts_async(providers=['asana'])
     context = manager.get_combined_context(providers=['asana'])
     print("Async Fetch Context (Specific):\n", context)
 
-# Fetch contexts synchronously and print the combined context
 def main_sync(config):
-    manager = ContextManager(config['context_providers'])
+    manager = ContextManager(config)
     manager.fetch_contexts()
     context = manager.get_combined_context()
     print("Sync Fetch Context (All):\n", context)
 
-# Fetch specific context synchronously and print the combined context
 def main_sync_specific(config):
-    manager = ContextManager(config['context_providers'])
+    manager = ContextManager(config)
     manager.fetch_contexts(providers=['asana'])
     context = manager.get_combined_context(providers=['asana'])
     print("Sync Fetch Context (Specific):\n", context)
@@ -127,16 +138,16 @@ def main_sync_specific(config):
 if __name__ == "__main__":
     config = load_config()
 
-    print("Running Async Fetch (All):")
+    print("Testing Async Fetch (All):")
     asyncio.run(main_async(config))
 
-    print("\nRunning Async Fetch (Specific):")
+    print("\nTesting Async Fetch (Specific):")
     asyncio.run(main_async_specific(config))
 
-    print("\nRunning Sync Fetch (All):")
+    print("\nTesting Sync Fetch (All):")
     main_sync(config)
 
-    print("\nRunning Sync Fetch (Specific):")
+    print("\nTesting Sync Fetch (Specific):")
     main_sync_specific(config)
 ```
 
