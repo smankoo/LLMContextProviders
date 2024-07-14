@@ -4,9 +4,10 @@ from .context_provider import ContextProvider
 from copy import deepcopy
 
 class ContextManager:
-    def __init__(self, context_providers_config):
+    def __init__(self, config):
         load_dotenv()
-        self.context_providers_config = context_providers_config
+        self.global_config = config.get('global', {})
+        self.context_providers_config = config.get('context_providers', {})
         self.context_providers = self.initialize_providers()
 
     def initialize_providers(self):
@@ -18,6 +19,8 @@ class ContextManager:
                     # Pass a copy of the config to avoid mutating the original
                     config_copy = deepcopy(provider_config)
                     config_copy.pop('enabled', None)
+                    # Add global configuration to the context provider's configuration
+                    config_copy.update(self.global_config)
                     providers[provider_name] = provider_class(**config_copy)
                 else:
                     print(f"Warning: No context provider class found for {provider_name}")
@@ -46,7 +49,9 @@ class ContextManager:
         combined_context = ""
         for provider_name in providers:
             if provider_name in self.context_providers:
-                combined_context += self.context_providers[provider_name].get_context() + "\n"
+                context = self.context_providers[provider_name].get_context()
+                if context:
+                    combined_context += context + "\n"
         return combined_context
 
     def get_status(self, providers=None):
