@@ -1,3 +1,6 @@
+global:
+  timezone: "America/Toronto"
+
 context_providers:
   asana:
     enabled: true
@@ -11,5 +14,4 @@ context_providers:
       Assignee: "assignee"
       Due On: "due_on"
       Notes: "notes"
-    timezone: "America/Toronto"
   # Add other context providers here

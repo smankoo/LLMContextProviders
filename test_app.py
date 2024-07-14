@@ -7,25 +7,25 @@ def load_config(config_file='config.yml'):
         return yaml.safe_load(file)
 
 async def main_async(config):
-    manager = ContextManager(config['context_providers'])
+    manager = ContextManager(config)
     await manager.fetch_contexts_async()
     context = manager.get_combined_context()
     print("Async Fetch Context (All):\n", context)
 
 async def main_async_specific(config):
-    manager = ContextManager(config['context_providers'])
+    manager = ContextManager(config)
     await manager.fetch_contexts_async(providers=['asana'])
     context = manager.get_combined_context(providers=['asana'])
     print("Async Fetch Context (Specific):\n", context)
 
 def main_sync(config):
-    manager = ContextManager(config['context_providers'])
+    manager = ContextManager(config)
     manager.fetch_contexts()
     context = manager.get_combined_context()
     print("Sync Fetch Context (All):\n", context)
 
 def main_sync_specific(config):
-    manager = ContextManager(config['context_providers'])
+    manager = ContextManager(config)
     manager.fetch_contexts(providers=['asana'])
     context = manager.get_combined_context(providers=['asana'])
     print("Sync Fetch Context (Specific):\n", context)
